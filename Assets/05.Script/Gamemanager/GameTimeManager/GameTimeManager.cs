@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class GameTimeManager : MonoBehaviour
 {
-    [SerializeField] private Combat _combat;
+    private Character _character;
     public float slowFactor = 0.05f;
     public float slowLength = 1f;
 
     private void Start()
     {
-        
+        _character = FindObjectOfType<Character>();
     }
-    public void DoSlowMotion()
+    private void DoSlowMotion()
     {
         Time.timeScale = slowFactor;
         Time.fixedDeltaTime = Time.timeScale * 0.02f;
@@ -20,7 +20,7 @@ public class GameTimeManager : MonoBehaviour
 
     private void Update()
     {
-        if (_combat.BashHold)
+        if (_character.CurrentState == Character.eCharacterStates.BASH)
         {
             DoSlowMotion();
         }

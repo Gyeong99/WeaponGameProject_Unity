@@ -4,21 +4,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-    public class FirePosMovement : MonoBehaviour
-    {
-        [SerializeField ]private SpringArm _springArm;
-        
-        
-        void Start()
-        {
-            
-        }
+public class FirePosMovement : MonoBehaviour
+{
+    private Transform _springArm;
+    private Character _character;
 
-        // Update is called once per frame
-        void Update()
-        {
-            transform.rotation = _springArm.transform.rotation;
-        }
+    public FirePosMovement SetUp()
+    {
+        _character = GetComponentInParent<Character>();
+        _springArm = _character.SpringArmTransform;
+
+        return this;
     }
+
+    public void RotationUpdated()
+    {
+        transform.rotation = _springArm.transform.rotation;
+    }
+}
 
 

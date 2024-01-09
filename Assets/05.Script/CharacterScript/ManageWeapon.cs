@@ -3,17 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[RequireComponent(typeof(Combat))]
-[RequireComponent(typeof(PlayerInput))]
-
-
 public class ManageWeapon : MonoBehaviour
 {
     [SerializeField] private GameObject _weapon;
     [SerializeField] private Transform _firePos;
     private GameObject copiedWeapon;
-    private Combat _combat;
-    private PlayerInput _playerInput;
     private Collider[] closeWeaponArr;
     private Weapon closeWeapon = null;
     [SerializeField]private float weaponPickUpDistance = 5.0f;
@@ -21,28 +15,8 @@ public class ManageWeapon : MonoBehaviour
     private bool _isHaveWeapon = true;
     public bool IsHaveWeapon { get => _isHaveWeapon; }
     
-    
-    private void Start()
-    {
-        _combat = GetComponent<Combat>();
-        _playerInput = GetComponent<PlayerInput>();
-    }
 
-    private void LateUpdate()
-    {
-        if (_combat.ThrowTrigger)
-        {
-            OnThrow();
-            _combat.ChangeBoolThrowTrigger();
-        }
-
-        if (_playerInput.WeaponPickUpInput)
-        {
-            FindWeapon();
-        }
-    }
-
-    private void OnThrow()
+    public void OnThrow()
     {
         CreateWeapon();
         _isHaveWeapon = !_isHaveWeapon;
@@ -54,7 +28,7 @@ public class ManageWeapon : MonoBehaviour
         copiedWeapon.GetComponent<Weapon>().ChangeBoolThrown();
     }
 
-    private void FindWeapon() 
+    public void FindWeapon() 
     {
         if (_isHaveWeapon)
         {

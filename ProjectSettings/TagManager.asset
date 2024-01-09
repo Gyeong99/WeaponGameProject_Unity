@@ -9,6 +9,7 @@ TagManager:
   - BashCollider
   - Weapon
   - Monster
+  - SpringArm
   layers:
   - Default
   - TransparentFX

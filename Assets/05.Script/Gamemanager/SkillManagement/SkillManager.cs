@@ -8,7 +8,7 @@ public class SkillManager : MonoBehaviour
     private enum State {Idle, SwordRain };
     private Skill skill = null;
     private GameObject playerObject = null;
-    private PlayerInput _playerInput;
+    private KeyInput _keyInput;
     private Transform playerTransform = null;
     private Vector3 spawnPoint;
     private int spawnPerFrame = 0;
@@ -17,12 +17,12 @@ public class SkillManager : MonoBehaviour
         skill = new Skill(new Skill_Idle());
         skill.OnStartState();
         playerObject = GameObject.FindWithTag("Player");
-        _playerInput = playerObject.GetComponent<PlayerInput>();
+        _keyInput = FindObjectOfType<KeyInput>();
     }
 
     private void Update()
     {
-        if (_playerInput.Skill01Input)
+        if (_keyInput.SkillSwordRainInput)
         {
             spawnPerFrame = 0;
             skill.SetSkillState(new Skill_SwordRain());

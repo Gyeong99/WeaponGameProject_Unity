@@ -20,18 +20,18 @@ using UnityEngine;
         public bool IsSpecialKeyHold { get => CheckSpecialKeyHold(); }
         public Vector2 MovementInput {get => _movementInput;}
         public bool JumpInput { get => _jumpInput; }
-        public bool ChangeCameraModeInput {get => _changeCameraModeInput;}
-        public bool WeaponPickUpInput { get => _weaponPickUpInput; }
-        
-        public bool BashInput { get => _bashInput;}
+        public bool ChangeCameraModeInput {get => _changeCameraModeInput;} // Not include FSM 20240104
+        public bool WeaponPickUpInput { get => _weaponPickUpInput; }    // Not include FSM 20240104
 
-        public bool Skill01Input { get => _skill01Input;  }
-        public bool IsBashKeyHold { get => CheckBashKeyHold(); }
-        public Vector2 MouseInput { get => _mouseInput;}
+    public bool BashInput { get => _bashInput;}
+
+        public bool Skill01Input { get => _skill01Input; } // Not include FSM 20240104
+    public bool IsBashKeyHold { get => CheckBashKeyHold(); }
+        public Vector2 MouseInput { get => _mouseInput; }    // Not include FSM 20240104
 
 
-        
-        private void Update()
+
+    private void Update()
         {
             _attackInput = Input.GetMouseButtonDown(0);
             _specialAttackInput = Input.GetMouseButtonDown(1);

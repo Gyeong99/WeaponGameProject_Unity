@@ -14,7 +14,7 @@ namespace Retro.ThirdPersonCharacter
         private PlayerInput _playerInput;
         private Combat _combat;
         private CharacterController _characterController;
-        private BashSkill _bashSkill;
+        private BashController _bashSkill;
 
         private Vector2 lastMovementInput;
         private Vector3 moveDirection = Vector3.zero;
@@ -41,7 +41,7 @@ namespace Retro.ThirdPersonCharacter
             _playerInput = GetComponent<PlayerInput>();
             _combat = GetComponent<Combat>();
             _characterController = GetComponent<CharacterController>();
-            _bashSkill = GetComponent<BashSkill>();
+            _bashSkill = GetComponent<BashController>();
             _animator = _animator_2;
         }
 
@@ -124,7 +124,6 @@ namespace Retro.ThirdPersonCharacter
                 _combat.ChangeBoolBashInProgress();     // true -> false
                 moveDirection = 5 * bashAfterMoveDir;
                 moveDirection.y = -0.1f;
-                Debug.Log("Bash End");
             }
         }
 
