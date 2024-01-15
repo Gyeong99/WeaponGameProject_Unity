@@ -28,7 +28,6 @@ namespace CharacterOwnedStates
         {
             CheckKeyInput();
         }
-        //해당 상태 종료시 1회 호출//
         public override void Exit(Character entity)
         {
             entity.PrintText("Idle State Out");
@@ -181,7 +180,8 @@ namespace CharacterOwnedStates
         //업데이트//
         public override void Execute(Character entity)
         {
-            if (!_keyInput.ThrowInput && !_throwInProgress)
+            if (!_keyInput.ThrowInput && !_throwInProgress &&
+                !_animator.GetCurrentAnimatorStateInfo(0).IsName("JG_Hold"))
             {
                 _firePosMovement.RotationUpdated();
                 _manageWeapon.OnThrow();
@@ -326,7 +326,6 @@ namespace CharacterOwnedStates
             bashAfterMoveDir = bashWeaponVector - entity.transform.position;
             bashAfterMoveDir = Vector3.Normalize(bashAfterMoveDir);
             _bashDistance = Vector3.Distance(entity.transform.position, bashWeaponVector);
-            UnityEngine.Debug.Log(bashWeaponVector);
             if (_bashDistance > 0.1f)
             {
                 
@@ -335,9 +334,7 @@ namespace CharacterOwnedStates
             else
             {
                 entity.ChangeState(Character.eCharacterStates.MOVE);
-                ///
-                ///   moveDirection = 5 * bashAfterMoveDir;
-                ///   moveDirection.y = -0.1f;
+                
             }
         }
     }

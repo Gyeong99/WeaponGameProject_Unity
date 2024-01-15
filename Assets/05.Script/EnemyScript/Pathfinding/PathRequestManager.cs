@@ -8,20 +8,20 @@ public class PathRequestManager : MonoBehaviour {
 	Queue<PathRequest> pathRequestQueue = new Queue<PathRequest>();
 	PathRequest currentPathRequest;
 
-	static PathRequestManager instance;
+	static PathRequestManager _instance;
 	Pathfinding pathfinding;
 
 	bool isProcessingPath;
 
 	void Awake() {
-		instance = this;
+		_instance = this;
 		pathfinding = GetComponent<Pathfinding>();
 	}
 
 	public void RequestPath(Vector3 pathStart, Vector3 pathEnd, Action<Vector3[], bool> callback) {
 		PathRequest newRequest = new PathRequest(pathStart,pathEnd,callback);
-		instance.pathRequestQueue.Enqueue(newRequest);
-		instance.TryProcessNext();
+		_instance.pathRequestQueue.Enqueue(newRequest);
+		_instance.TryProcessNext();
 	}
 
 	void TryProcessNext() {

@@ -44,15 +44,6 @@ public class WeaponDetectCollider : MonoBehaviour
         ChangeActive(_isActive);
         return this;
     }
-   
-
-    private void Update()
-    {
-        /*dirVector = _springArmTr.forward;
-        dirVector = Vector3.Normalize(dirVector);
-        ChangeRadiusAsVitality();
-        FindBashWeapon();*/
-    }
     public void Updated()
     {
         dirVector = _springArmTr.forward;
@@ -64,6 +55,29 @@ public class WeaponDetectCollider : MonoBehaviour
     private void ChangeActive(bool bActive)
     {
         gameObject.SetActive(bActive);
+    }
+    private void ChangeRadiusAsVitality()
+    {
+        _colliderMaxRadius = _colliderDefaultRadius * _character.VitalityPoint * 0.01f;
+    }
+
+
+    private void FindBashWeapon()
+    {
+        if (Physics.SphereCast(transform.position, 0.3f, dirVector, out RaycastHit hit, _sphereCollider.radius + 1.0f, layerMaskWeapon))
+        {
+            if (hit.transform.gameObject.tag == "Weapon" && hit.transform.GetComponent<Weapon>().isCanBash)
+            {
+                _isFindBashWeapon = true;
+                _bashWeaponVector = hit.transform.position;
+                hit.transform.GetComponent<Weapon>().ChangeTriggerBashBool(true);
+            }
+        }
+        else
+        {
+            _isFindBashWeapon = false;
+            _bashWeaponVector = Vector3.zero;
+        }
     }
 
     public void ExpandRadius()
@@ -91,30 +105,7 @@ public class WeaponDetectCollider : MonoBehaviour
         return _sphereCollider.radius;
     }
 
-    private void ChangeRadiusAsVitality()
-    {
-        _colliderMaxRadius = _colliderDefaultRadius * _character.VitalityPoint * 0.01f;
-    }
-
    
-    private void FindBashWeapon()
-    {
-        if (Physics.SphereCast(transform.position, 0.3f, dirVector, out RaycastHit hit, _sphereCollider.radius + 1.0f , layerMaskWeapon))
-        {
-            if (hit.transform.gameObject.tag == "Weapon" && hit.transform.GetComponent<Weapon>().isCanBash)
-            {
-                _isFindBashWeapon = true;
-                _bashWeaponVector = hit.transform.position;
-                hit.transform.GetComponent<Weapon>().ChangeTriggerBashBool(true);
-            }
-        }
-        else
-        {
-            _isFindBashWeapon = false;
-            _bashWeaponVector = Vector3.zero;
-        }
-    }
-
     public void PlaySound()
     {
         _audioSource.Play();

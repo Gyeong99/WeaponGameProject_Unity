@@ -65,7 +65,6 @@ namespace Retro.ThirdPersonCharacter
                 }
                 else
                 {
-                    //Debug.Log(_combat.ThrowInProgress);
                     StopMovementOnThrow();
                 }
             }
@@ -75,7 +74,7 @@ namespace Retro.ThirdPersonCharacter
             }
             else if (_combat.BashInProgress)
             {
-                BashMovement();                 // 행동 순서 사이드 이펙트 주의 (배쉬 무브먼트 함수의 우선순위가 높아지면 사이드 이펙트 발생 가능성 있음.)
+                BashMovement();                 
             }
             else
             {

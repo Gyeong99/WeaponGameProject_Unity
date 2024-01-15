@@ -35,7 +35,6 @@ public class MonsterController : MonoBehaviour
         for (int i = 0; i < Monsterentitys.Count; i++)
         {
             Monsterentitys[i].Updated();
-            
         }
     }
 

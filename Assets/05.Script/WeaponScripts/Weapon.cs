@@ -38,13 +38,14 @@ public class Weapon : MonoBehaviour
     private void Update()
     {
         _isTriggerBash = false;
+        CheckWeaponBashStatus();
     }
 
     private void FixedUpdate()
     {
-        CheckSpawnMovementEnd();
-        CheckWeaponBashStatus();
         ChangeWeaponColor();
+        CheckSpawnMovementEnd();
+        
     }
 
     private void CheckSpawnMovementEnd()
@@ -170,6 +171,8 @@ public class Weapon : MonoBehaviour
             if (_isCanBash)
             {
                 SetOnTriggerBashBool();
+                Debug.Log("Entered");
+                weaponColor.material = _weaponMat[3];
             }
         }
         else

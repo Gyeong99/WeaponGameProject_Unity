@@ -64,7 +64,6 @@ namespace MonsterOwnedStates
         public override void Enter(Monster entity)
         {
             entity.CurrentState = eMonsterStates.BATTLE;
-            entity.SetAnimatorTrigger("Idle");
             entity.PrintText("BattleStateEnter");
         }
         //업데이트//
@@ -78,7 +77,7 @@ namespace MonsterOwnedStates
         //해당 상태 종료시 1회 호출//
         public override void Exit(Monster entity)
         {
-            //entity.PrintText("This monster is outta in Move State");
+            
         }
     }
 

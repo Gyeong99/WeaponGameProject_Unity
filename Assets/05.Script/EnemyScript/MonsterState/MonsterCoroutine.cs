@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class MonsterCoroutine : MonoBehaviour
 {
+    [SerializeField]
+    private bool isDrawGizmo;
     private float m_speed = 15;
     private long m_frameCount = 0;
     private Vector3[] path;
@@ -43,7 +45,7 @@ public class MonsterCoroutine : MonoBehaviour
             {
                 if (Vector3.Distance(previousStartNode, newPath[0]) <= 4.0f)
                 {
-                    Debug.Log(path.Length);
+                    
                     //return;
                 }
             }
@@ -69,6 +71,7 @@ public class MonsterCoroutine : MonoBehaviour
         StartCoroutine("BattleThink");
     }
 
+
     IEnumerator FollowPath()
     {
         //if (path.Length == 0)
@@ -76,8 +79,6 @@ public class MonsterCoroutine : MonoBehaviour
         Vector3 currentWaypoint = path[0];
         while (true)
         {
-            Debug.Log(monster.CurrentState);
-            Debug.Log(eMonsterStates.MOVE);
             if (monster.CurrentState != eMonsterStates.MOVE)
             {
                 yield break;
@@ -91,7 +92,6 @@ public class MonsterCoroutine : MonoBehaviour
                 }
                 currentWaypoint = path[m_targetIndex];
             }
-            Debug.Log(currentWaypoint);
             transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, m_speed * Time.deltaTime);
             transform.rotation = Quaternion.LookRotation(currentWaypoint - transform.position, Vector3.up);
             yield return new WaitForSeconds(0.01f);
@@ -104,7 +104,7 @@ public class MonsterCoroutine : MonoBehaviour
 
         while (true)
         {
-            if (monster.CurrentState == eMonsterStates.IDLE)
+            if (monster.CurrentState == eMonsterStates.IDLE || monster.CurrentState == eMonsterStates.MOVE)
             {
                 StopCoroutine("BattleThink");
                 yield break;
@@ -138,22 +138,25 @@ public class MonsterCoroutine : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-        if (path != null)
-        {
-            for (int i = m_targetIndex; i < path.Length; i++)
+        if (isDrawGizmo) {
+            if (path != null)
             {
-                Gizmos.color = Color.black;
-                Gizmos.DrawCube(path[i], Vector3.one);
+                for (int i = m_targetIndex; i < path.Length; i++)
+                {
+                    Gizmos.color = Color.black;
+                    Gizmos.DrawCube(path[i], Vector3.one);
 
-                if (i == m_targetIndex)
-                {
-                    Gizmos.DrawLine(transform.position, path[i]);
-                }
-                else
-                {
-                    Gizmos.DrawLine(path[i - 1], path[i]);
+                    if (i == m_targetIndex)
+                    {
+                        Gizmos.DrawLine(transform.position, path[i]);
+                    }
+                    else
+                    {
+                        Gizmos.DrawLine(path[i - 1], path[i]);
+                    }
                 }
             }
         }
+        
     }
 }

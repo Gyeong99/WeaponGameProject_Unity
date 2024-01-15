@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class ManageWeapon : MonoBehaviour
 {
-    [SerializeField] private GameObject _weapon;
+    [SerializeField] private GameObject _weaponPrefab;
+    [SerializeField] private GameObject _weaponHaven;
     [SerializeField] private Transform _firePos;
     private GameObject copiedWeapon;
     private Collider[] closeWeaponArr;
@@ -19,11 +20,12 @@ public class ManageWeapon : MonoBehaviour
     public void OnThrow()
     {
         CreateWeapon();
+        _weaponHaven.SetActive(false);
         _isHaveWeapon = !_isHaveWeapon;
     }
     private void CreateWeapon()
     {
-        copiedWeapon = Instantiate(_weapon, _firePos.position, _firePos.rotation);
+        copiedWeapon = Instantiate(_weaponPrefab, _firePos.position, _firePos.rotation);
         copiedWeapon.transform.rotation = _firePos.rotation;
         copiedWeapon.GetComponent<Weapon>().ChangeBoolThrown();
     }
@@ -56,7 +58,6 @@ public class ManageWeapon : MonoBehaviour
 
         if (closeWeapon != null)
         {
-            Debug.Log(closeWeapon.transform.position);
             if (closeWeapon.GetComponentInChildren<WeaponCollider>().IsCanPickUp)
             {
                 PickUpWeapon(closeWeapon);
@@ -64,7 +65,7 @@ public class ManageWeapon : MonoBehaviour
             }
             else
             {
-                Debug.Log("error : Weapon , BoolCanPickUp is false");
+                //Debug.Log("error : Weapon , BoolCanPickUp is false");
             }
         }
         else
@@ -78,6 +79,7 @@ public class ManageWeapon : MonoBehaviour
     {
         _isHaveWeapon = !_isHaveWeapon;
         weapon.DestroyWeapon();
+        _weaponHaven.SetActive(true);
         closeWeapon = null;
         closeWeaponArr = null;
     }

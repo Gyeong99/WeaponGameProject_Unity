@@ -10,6 +10,8 @@ public class Character : CharacterBase
 {
     [SerializeField]
     private float _vitalityPoint = 100.0f;
+    [SerializeField]
+    private Transform _modelTr;
     public enum eCharacterStates
     {
         IDLE = 0,
@@ -23,11 +25,16 @@ public class Character : CharacterBase
         DAMAGED,
         DIE,
     }
+
+    /*******************************************************
+    *                Private Variable Field
+    ******************************************************/
+    #region .
+    private eCharacterStates _stateNum;
     private EntityState<Character> _currentState;
     private EntityState<Character>[] characterStates;
-    private CharacterController _characterController;
-    private eCharacterStates stateNum;
 
+    private CharacterController _characterController;
     private Animator _ownedAnimator;
     private KeyInput _keyInput;
     private CombatInput _combatInput;
@@ -37,51 +44,41 @@ public class Character : CharacterBase
     private WeaponDetectCollider _weaponDetectCollider;
     private Transform _springArmTransform;
     private CharacterMovement _characterMovement;
-    
+    #endregion
+    /*******************************************************
+     *                Public Variable Field
+     ******************************************************/
+    #region .
     public eCharacterStates CurrentState
     {
-        set => stateNum = value;
-        get => stateNum;
+        set => _stateNum = value;
+        get => _stateNum;
     }
     public float VitalityPoint
     {
         set => _vitalityPoint = value;
         get => _vitalityPoint;
     }
-
-    public CharacterController CharacterController
-    {
-        get => _characterController;
-    }
-    public Animator OwnedAnimator
-    {
-        get => _ownedAnimator;
-    }
-    public KeyInput KeyInput
-    {
-        get => _keyInput;
-    }
-    public ManageWeapon ManageWepon
-    {
-        get => _manageWeapon;
-    }
-    public BashController BashController
-    {
-        get => _bashController;
-    }
+    public CharacterController CharacterController { get => _characterController; }
+    public Animator OwnedAnimator { get => _ownedAnimator; }
+    public KeyInput KeyInput { get => _keyInput; }
+    public ManageWeapon ManageWepon { get => _manageWeapon; }
+    public BashController BashController { get => _bashController; }
     public WeaponDetectCollider WeaponDetectCollider { get => _weaponDetectCollider; }
-    public Transform SpringArmTransform {
-        get => _springArmTransform;
-    }
+    public Transform SpringArmTransform { get => _springArmTransform; }
     public FirePosMovement FirePosMovement { get => _firePosMovement; }
-    public Transform ModelTr;
-
+    public Transform ModelTr { get => _modelTr; }
+    #endregion
+    /*******************************************************
+     *                Override Event Field
+     ******************************************************/
+    #region .
     public override void SetUp(string name)
     {
         base.SetUp(name);
         gameObject.name = $"_Player_{name}";
         _springArmTransform = GameObject.FindGameObjectWithTag("SpringArm").GetComponent<Transform>();
-        _ownedAnimator = ModelTr.GetComponent<Animator>();
+        _ownedAnimator = _modelTr.GetComponent<Animator>();
         _characterController = GetComponent<CharacterController>();
         _keyInput = FindObjectOfType<KeyInput>();
         _combatInput = GetComponent<CombatInput>();
@@ -90,8 +87,8 @@ public class Character : CharacterBase
         _bashController = GetComponent<BashController>().SetUp(this);
         _firePosMovement = GetComponentInChildren<FirePosMovement>();
         _characterMovement = GetComponent<CharacterMovement>().SetUp(this);
-        
-        
+
+
         StateSetUp();
 
         ChangeState(eCharacterStates.IDLE);
@@ -102,8 +99,21 @@ public class Character : CharacterBase
             PrintText($"Error : This Entity doesn't have Animator");
         }
     }
-
-    public void StateSetUp()
+    public override void Updated()
+    {
+        if (_currentState != null)
+        {
+            _currentState.Execute(this);
+        }
+        _combatInput.Updated();
+        _characterMovement.Updated();
+    }
+    #endregion
+    /*******************************************************
+    *                Private Method Field
+    ******************************************************/
+    #region .
+    private void StateSetUp()
     {
         int stateCount = Enum.GetNames(typeof(eCharacterStates)).Length;
         characterStates = new EntityState<Character>[stateCount];
@@ -123,41 +133,14 @@ public class Character : CharacterBase
             characterStates[index].SetUp(this);
         }
     }
-    public void ChangeState(eCharacterStates newCharacterState)
-    {
-        if (characterStates[(int)newCharacterState] == null)
-        {
-            return;
-        }
-        
-        if (_currentState != null)
-            _currentState.Exit(this);
-        _currentState = characterStates[(int)newCharacterState];
-        CurrentState = newCharacterState;
-        _currentState.Enter(this);
-    }
-
-    public override void Updated()
-    {
-        if (_currentState != null)
-        {
-            _currentState.Execute(this);
-        }
-        _combatInput.Updated();
-        _characterMovement.Updated();
-    }
-    public override void FixedUpdated()
-    {
-        UpdateCharacterStatus();
-    }
-
     private void UpdateCharacterStatus()
     {
         UpdateVitality();
     }
     private void UpdateVitality()
     {
-        switch (CurrentState) {
+        switch (CurrentState)
+        {
             case eCharacterStates.BASH:
                 ReduceVitalityOnHoldBash(); break;
             default:
@@ -175,4 +158,30 @@ public class Character : CharacterBase
     {
         _vitalityPoint -= 0.1f;
     }
+    #endregion
+    /*******************************************************
+    *                Public Method Field
+    ******************************************************/
+    #region .
+    public void ChangeState(eCharacterStates newCharacterState)
+    {
+        if (characterStates[(int)newCharacterState] == null)
+        {
+            return;
+        }
+
+        if (_currentState != null)
+            _currentState.Exit(this);
+        _currentState = characterStates[(int)newCharacterState];
+        CurrentState = newCharacterState;
+        _currentState.Enter(this);
+    }
+
+
+    public override void FixedUpdated()
+    {
+        UpdateCharacterStatus();
+    }
+    #endregion
+
 }
